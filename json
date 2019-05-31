@@ -1,0 +1,27 @@
+import json
+
+def count_descendants(json_string):
+
+    def dfs(name, child):
+        children[name].append(child)
+        visited[name] = True
+        for parent in pairs[name]:
+            if not visited[parent]:
+                dfs(parent, child)
+
+    pairs = {pair['name']: pair['parents'] for pair in json.loads(json_string)}
+    children = {parent: [] for parent in pairs.keys()}
+
+    for name in pairs.keys():
+        visited = {name: False for name in pairs.keys()}
+        dfs(name, name)
+
+    for parent in sorted(children.keys()):
+        print('{} {} {}'.format(parent, ": ", len(children[parent])))
+
+count_descendants('[{"name": "B", "parents": ["A", "C"]}, '
+                  '{"name": "C", "parents": ["A"]},'
+                  '{"name": "A", "parents": []},'
+                  '{"name": "D", "parents": ["C", "F"]},'
+                  '{"name": "E", "parents": ["D"]},'
+                  '{"name": "F", "parents": []}]')
